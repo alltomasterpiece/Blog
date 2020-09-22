@@ -1,0 +1,69 @@
+<template>
+  <v-main >
+    <v-row >
+      <v-col >
+        <aside
+          v-if="computedTheme === 'sidebar-left'"
+          class="column left-sidebar one-quarter"
+        >
+          <slot name="sidebar"></slot>
+        </aside>
+        <div
+          :class="{
+            column: true,
+            'full': computedTheme === 'one-column' && !oneColumnConstrained,
+            'offset-2':
+              oneColumnConstrained && computedTheme === 'one-column',
+            'three-quarters': computedTheme !== 'one-column'
+          }"
+        >
+          <slot></slot>
+        </div>
+        <aside
+          v-if="computedTheme === 'sidebar-right'"
+          class="column right-sidebar is-one-quarter"
+        >
+          <slot name="sidebar"></slot>
+        </aside>
+      </v-col>
+    </v-row>
+  </v-main>
+</template>
+<script>
+export default {
+  name: 'MainSection',
+  props: {
+    oneColumnConstrained: { type: Boolean, default: false },
+    theme: { type: String, default: '' }
+  },
+  computed: {
+    computedTheme() {
+      if (this.theme) {
+        return this.theme
+      }
+      if (this.$siteConfig.layout.theme) {
+        return this.$siteConfig.layout.theme
+      }
+      return 'one-column'
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.page-main-section {
+  margin-top: 52px;
+}
+.hero + .page-main-section {
+  margin-top: initial;
+}
+.one-quarter {
+  padding: 0 20px;
+  &.right-sidebar {
+    border-left: 1px solid #eee;
+  }
+  &.left-sidebar {
+    border-right: 1px solid #eee;
+  }
+}
+</style>
